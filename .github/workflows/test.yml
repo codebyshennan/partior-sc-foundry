@@ -11,7 +11,14 @@ jobs:
       fail-fast: true
 
     name: Foundry project
+
     runs-on: ubuntu-latest
+
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
     steps:
       - uses: actions/checkout@v3
         with:
@@ -32,3 +39,14 @@ jobs:
         run: |
           forge test -vvv
         id: test
+
+      - name: Run Slither
+        uses: crytic/slither-action@v0.1.0
+        continue-on-error: true
+        id: slither
+        with:
+          ignore-compile: true
+          target: "src/"
+          solc-version: "0.8.9"
+          node-version: 18
+#          sarif: results.sarif
